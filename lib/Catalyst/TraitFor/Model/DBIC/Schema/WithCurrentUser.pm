@@ -5,9 +5,7 @@ use Catalyst::Model::DBIC::Schema 0.58 ();
 
 with 'Catalyst::TraitFor::Model::DBIC::Schema::PerRequestSchema';
 
-BEGIN {
-    # VERSION
-}
+# VERSION
 
 # ABSTRACT: Puts the context's current user into your Catalyst::Model::DBIC::Schema schema.
 
