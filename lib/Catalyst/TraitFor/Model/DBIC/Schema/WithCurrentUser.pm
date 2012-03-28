@@ -1,5 +1,6 @@
 package Catalyst::TraitFor::Model::DBIC::Schema::WithCurrentUser;
 use Moose::Role;
+use Carp qw/ confess /;
 use namespace::autoclean;
 use Catalyst::Model::DBIC::Schema 0.58 ();
 
@@ -9,10 +10,17 @@ with 'Catalyst::TraitFor::Model::DBIC::Schema::PerRequestSchema';
 
 # ABSTRACT: Puts the context's current user into your Catalyst::Model::DBIC::Schema schema.
 
+our $DEPTH = 0;
+
 sub per_request_schema_attributes {
     my ($self, $ctx) = @_;
 
-    return () unless ( $ctx->user_exists );
+    $DEPTH = $DEPTH + 1;
+
+    confess('Recursing into per_request_schema_attributes - calling $ctx->user_exists or $ctx->user is broken')
+        if $DEPTH > 2;
+
+    return unless ( $ctx->user_exists );
 
     return ( current_user => $ctx->user );
 }
